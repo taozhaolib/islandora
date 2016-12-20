@@ -14,7 +14,7 @@ if (function_exists('drupal_get_path')) {
   $islandora_module_path = drupal_get_path('module', 'islandora');
 }
 
-// @todo this until we expose these in a module or library
+// @todo this until we expost these in a module or library
 @include_once 'sites/all/libraries/tuque/Datastream.php';
 @include_once 'sites/all/libraries/tuque/FedoraApi.php';
 @include_once 'sites/all/libraries/tuque/FedoraApiSerializer.php';
@@ -320,6 +320,10 @@ class IslandoraFedoraObject extends FedoraObject {
       throw $e;
     }
   }
+  
+  public function getObjectProfile(){
+      return $this->objectProfile;
+  }
 }
 
 class IslandoraRepositoryConnection extends RepositoryConnection {
@@ -594,7 +598,7 @@ class IslandoraFedoraDatastream extends FedoraDatastream {
   protected function modifyDatastream(array $args) {
     try {
       parent::modifyDatastream($args);
-      islandora_invoke_datastream_hooks(ISLANDORA_DATASTREAM_MODIFIED_HOOK, $this->parent->models, $this->id, $this->parent, $this, $args);
+      islandora_invoke_datastream_hooks(ISLANDORA_DATASTREAM_MODIFIED_HOOK, $this->parent->models, $this->id, $this->parent, $this);
       if ($this->state == 'D') {
         islandora_invoke_datastream_hooks(ISLANDORA_DATASTREAM_PURGED_HOOK, $this->parent->models, $this->id, $this->parent, $this->id);
       }
